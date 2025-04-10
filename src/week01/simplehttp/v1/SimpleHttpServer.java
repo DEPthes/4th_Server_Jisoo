@@ -1,4 +1,4 @@
-package week01.simplehttp;
+package week01.simplehttp.v1;
 
 import java.io.*;
 import java.net.ServerSocket;
