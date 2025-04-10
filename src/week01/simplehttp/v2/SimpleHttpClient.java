@@ -2,7 +2,7 @@ package week01.simplehttp.v2;
 
 import java.io.*;
 import java.net.Socket;
-
+// 서버에 HTTP 요청을 보내고 응답을 출력하는 클라이언트 코드
 public class SimpleHttpClient {
     public static void main(String[] args) {
         String host = "127.0.0.1";

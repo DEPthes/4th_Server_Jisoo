@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+// 클라이언트의 요청을 파싱하는 클래스
+// 첫 줄(GET /today HTTP/1.1)을 읽어서 Request 객체 생성
 public class RequestParser {
     private final Socket socket;
 

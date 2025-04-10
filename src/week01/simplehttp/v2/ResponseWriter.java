@@ -3,7 +3,8 @@ package week01.simplehttp.v2;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Date;
-
+// 요청에 대한 응답을 생성하고 클라이언트에 전송하는 클래스
+// URI에 따라 응답 본문을 다르게 처리
 public class ResponseWriter {
     private final Socket socket;
     private final Request request;

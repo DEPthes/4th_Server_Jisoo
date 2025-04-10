@@ -1,5 +1,8 @@
 package week01.simplehttp.v2;
-
+//요청 정보를 저장하는 DTO 클래스
+// HTTP Method (GET, POST 등)
+// URI (요청 경로)
+// HTTP 버전
 public class Request {
     private final String method;
     private final String uri;
