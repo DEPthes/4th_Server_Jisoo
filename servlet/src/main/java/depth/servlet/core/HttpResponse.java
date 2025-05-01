@@ -1,4 +1,4 @@
-package depth.servlet;
+package depth.servlet.core;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
