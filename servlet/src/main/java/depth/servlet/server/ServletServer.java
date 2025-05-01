@@ -6,6 +6,7 @@ import depth.servlet.core.HttpRequest;
 import depth.servlet.core.HttpResponse;
 import depth.servlet.core.MyServlet;
 import depth.servlet.core.NotFoundServlet;
+import depth.servlet.listener.MyRequestListener;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -20,6 +21,8 @@ import java.util.concurrent.Executors;
 public class ServletServer {
     private final Map<String, MyServlet> servletMap = new HashMap<>();
     private final List<MyFilter> filters = new ArrayList<>(); // 필터 목록 추가
+
+    private final List<MyRequestListener> requestListeners = new ArrayList<>(); // 리스너 추가
     private final ExecutorService threadPool = Executors.newFixedThreadPool(10); //스레드풀 필드 추가
     public void registerServlet(String path, MyServlet servlet) {
         servletMap.put(path, servlet); // 경로 등록
@@ -28,6 +31,10 @@ public class ServletServer {
     // 필터 등록 메서드
     public void addFilter(MyFilter filter) {
         filters.add(filter);
+    }
+    // 리스너 등록 메서드
+    public void addRequestListener(MyRequestListener listener) {
+        requestListeners.add(listener);
     }
     public void start(int port) throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
@@ -47,7 +54,12 @@ public class ServletServer {
             HttpRequest request = new HttpRequest(in);     // 요청 파싱
             HttpResponse response = new HttpResponse(out); // 응답 생성
 
-            System.out.println("Processing by: " + Thread.currentThread().getName());
+            // 요청 시작 시 리스너 실행
+            for (MyRequestListener listener : requestListeners) {
+                listener.onRequestInitialized(request);
+            }
+
+            //System.out.println("Processing by: " + Thread.currentThread().getName());
 
             // 요청에 해당하는 서블릿 찾기
             MyServlet servlet = servletMap.getOrDefault(request.getPath(), new NotFoundServlet());
@@ -55,6 +67,11 @@ public class ServletServer {
             // 필터 체인 생성 후 실행
             FilterChain chain = new FilterChain(filters, servlet);
             chain.doFilter(request, response);
+
+            // 요청 끝났을 때 리스너 실행
+            for (MyRequestListener listener : requestListeners) {
+                listener.onRequestDestroyed(request);
+            }
 
             socket.close();
         } catch (Exception e) {
